@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:Design Patterns.playground">
+   </FileRef>
+   <FileRef
+      location = "group:Lazy Initialization.playground">
+   </FileRef>
+   <FileRef
+      location = "group:Singleton.playground">
+   </FileRef>
+   <FileRef
+      location = "group:Factory.playground">
+   </FileRef>
+   <FileRef
+      location = "group:Strategy.playground">
+   </FileRef>
+   <FileRef
+      location = "group:Decorator.playground">
+   </FileRef>
+   <FileRef
+      location = "group:Observer Pattern.playground">
+   </FileRef>
+</Workspace>
