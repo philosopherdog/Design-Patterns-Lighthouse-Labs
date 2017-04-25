@@ -22,4 +22,7 @@
    <FileRef
       location = "group:Observer Pattern.playground">
    </FileRef>
+   <FileRef
+      location = "group:State Pattern.playground">
+   </FileRef>
 </Workspace>

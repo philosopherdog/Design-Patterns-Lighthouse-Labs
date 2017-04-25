@@ -31,14 +31,14 @@ class MyNetworkManagerSingleton2 {
 
 class MyNetworkManagerSingleton3 {
   private init() {}
-  let sharedInstance = MyNetworkManagerSingleton3()
+  // let sharedInstance = MyNetworkManagerSingleton3()
 }
 
 /*:
 - The trick is we want this class to initialize itself and retain itself.
 */
 
-//let mnws3 = MyNetworkManagerSingleton3()
+// let mnws3 = MyNetworkManagerSingleton3()
 
 /*:
 - To call the sharedInstance property we can't call it on an instance because we can't create one from the outside.

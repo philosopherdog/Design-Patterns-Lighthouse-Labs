@@ -85,6 +85,12 @@ houseWithWhipAndMilk.cost()
 
 class Beverage2: CustomStringConvertible {
   
+  var milk: Bool?
+  var soy: Bool?
+  var mocha: Bool?
+  var whip: Bool?
+  // we would need a lot more
+  
   var description: String {
     var str = ""
     if milk == true {
@@ -118,12 +124,7 @@ class Beverage2: CustomStringConvertible {
     }
     return cost
   }
-  
-  var milk: Bool?
-  var soy: Bool?
-  var mocha: Bool?
-  var whip: Bool?
-  // we would need a lot more
+
 }
 
 class HouseBlend2: Beverage2 {
@@ -212,11 +213,11 @@ class BeverageDecorator: Beverage3 {
 class MilkDecorator: BeverageDecorator {
   
   override var description: String {
-    return beverage.description + " milk"
+    return super.description + " milk"
   }
   
   override func cost() -> Double {
-    return 0.10 + beverage.cost()
+    return 0.10 + super.cost()
   }
 }
 
@@ -242,11 +243,11 @@ class MilkDecorator: BeverageDecorator {
 class MochaDecorator: BeverageDecorator {
   
   override var description: String {
-    return beverage.description + " mocha"
+    return super.description + " mocha"
   }
   
   override func cost() -> Double {
-    return 0.50 + beverage.cost()
+    return 0.50 + super.cost()
   }
 }
 
