@@ -28,4 +28,7 @@
    <FileRef
       location = "group:Adapter Pattern.playground">
    </FileRef>
+   <FileRef
+      location = "group:Facade Pattern.playground">
+   </FileRef>
 </Workspace>
