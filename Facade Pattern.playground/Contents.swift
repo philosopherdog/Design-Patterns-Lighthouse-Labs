@@ -51,6 +51,7 @@ class Amp {
 }
 
 class Tuner {}
+
 class DVDPlayer {
   func on() {
     print(#line, "tuner", #function)

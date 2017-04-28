@@ -1,7 +1,7 @@
 import UIKit
 
 /*:
-#Command Pattern
+# Command Pattern
 
 ![](remote.png)
 
@@ -39,6 +39,8 @@ struct LightOnCommand: Command {
     light.on()
   }
 }
+
+
 
 struct LightOffCommand: Command {
   let light: Light

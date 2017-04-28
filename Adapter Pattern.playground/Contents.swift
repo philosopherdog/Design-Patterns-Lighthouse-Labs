@@ -96,11 +96,30 @@ test(with: turkeyAdapter)
 - We want to be able to call a test method that takes turkeys and be able to pass a Duck to this method:
 */
 
+class DuckAdapter: Turkey {
+  let duck: Duck
+  func gobble() {
+    duck.quack()
+  }
+  func fly() {
+    duck.fly()
+  }
+  init(duck: Duck) {
+    self.duck = duck
+  }
+}
 
-func test(with turkey: Turkey) {
+
+
+func test(withTurkey: Turkey) {
   turkey.gobble()
   turkey.fly()
 }
+
+let duckAdapter = DuckAdapter(duck: mallard)
+
+test(withTurkey: turkey)
+test(withTurkey: duckAdapter)
 
 /*:
 ![](def.png)

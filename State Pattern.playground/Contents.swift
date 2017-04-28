@@ -280,6 +280,7 @@ class NoQuarterState: GumBallState {
     }
     else {
       delegate?.setCurrentState(at: StateEnum.soldOutState.rawValue)
+      ejectQuarter()
     }
   }
   override func ejectQuarter() {
@@ -371,7 +372,7 @@ gumBallMachine.dispense()
 print(#line, gumBallMachine.state)
 gumBallMachine.gumballCount
 
-/*
+/*:
 - This gets rid of all of the conditional code inside the GumBallMachine.
 - The behaviors are delegated to the states using polymorphism.
 - The GumBallMachine doesn't need to know what state its in.
