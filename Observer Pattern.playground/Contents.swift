@@ -17,7 +17,9 @@ import UIKit
 
 - Cocoa Touch has NotificationCenter and KVO that already use the Observer Pattern.
 - But we can learn some things by rolling our own.
-- I'm using blocks instead of Selectors to add observers and post notifications.
+- In my hand rolled Observer I'm using blocks instead of Selectors to add observers and post notifications.
+- The Observer Pattern is at the heart of the reactive programming. 
+- The Observer is a very good fit for asynchronous programming, multi-threaded programming, and event chaining.
 */
 
 class MyNotificationCenter: NSObject {
@@ -28,23 +30,27 @@ class MyNotificationCenter: NSObject {
   private override init() {}
   
   // this is the type of the block
-  typealias MyNotification = (Dictionary<AnyHashable,AnyObject>?) -> Void
+  typealias Observer = (Dictionary<AnyHashable,AnyObject>?) -> Void
   
-  private var observers: Dictionary<AnyHashable, [MyNotification]> = [:]
+  // We will hold an array of observers
+  private var observers: Dictionary<AnyHashable, [Observer]> = [:]
   
-  func addObserver(with name: String, block: @escaping MyNotification) {
+  func addObserver(with name: String, block: @escaping Observer) {
     if observers[name] == nil {
-      observers[name] = [MyNotification]()
+      observers[name] = [Observer]()
     }
-    observers[name]?.append(block)
+    observers[name]?.append(block) // what does the ? do here
   }
   
+  // If somebody wants to post a notification, they pass us the name of the notification, and the data. 
+  // We then check to see if any objects have signed up to receive notifications by that name, and if they have we send out the notification to all observers
+  
   func postNotification(with name: String, data: Dictionary<AnyHashable,AnyObject>?) {
-    guard let blocks = observers[name] else {
+    guard let observersForName = observers[name] else {
       return
     }
-    for block in blocks {
-      block(data)
+    for observer: Observer in observersForName {
+      observer(data)
     }
   }
 }
@@ -73,5 +79,6 @@ weatherApp1.addObserver()
 let weatherApp2 = WeatherApp()
 weatherApp2.addObserver()
 
-let fromSensors: Dictionary<AnyHashable, AnyObject>? = ["Toronto" : "Rainy" as AnyObject]
-station.didReceiveData(data: fromSensors)
+let weatherData: Dictionary<AnyHashable, AnyObject>? = ["Toronto" : "Rainy" as AnyObject]
+station.didReceiveData(data: weatherData) // 2 weather apps received the notification about the new weather.
+
