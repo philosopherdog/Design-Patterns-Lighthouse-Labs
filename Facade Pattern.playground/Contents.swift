@@ -3,9 +3,10 @@ import UIKit
 /*:
  # Facade Pattern
  - Related to the Adapter Pattern, but the intent of the pattern is different.
- - The Adapter's intent is to alter an interface so taht it matches what the client is expecting.
+ - The Adapter's intent is to alter an interface so that it matches what the client is expecting.
  - The intent of the Facade Patterns is to provide a simplified interface to a subsystem.
- - Computing employs the Facade Pattern everywhere by hiding complexity and exposing functionality through a simplified interface. Consider Finder on MacOS. It hides complex operatons behind a simplified interface.
+ - Computing employs the Facade Pattern everywhere by hiding complexity and exposing functionality through a simplified interface. 
+ - Consider Finder on MacOS. It hides complex operations, and details about the file system behind a simplified interface. Making all of this complexity visible to users would mean you might need to look at a manual to Finder to do simple operations.
  - Let's look at HeadFirst's example.
  
  ![](mess.png)
@@ -17,8 +18,8 @@ import UIKit
  
  ![](steps_incode.png)
  
- - To shut down our home theatre this way we would have expose our client to the nitty gritty of our home theatre.
- - If our theatre system changes in any way this will cause us to open this code for modification.
+ - To shut down our home theatre without the facade pattern we would have to expose our client to the nitty gritty (concrete details) of our home theatre setup. We would have to know every shutdown API for each sub-system.
+ - Also, if our home theatre changes in any way (like gets a new blue ray player) this will cause us to open this code for modification (violates Open/Closed).
  - Playing music may be equally complex.
  - The Facade Pattern puts this whole subsystem behind a simplified interface.
  
@@ -30,7 +31,8 @@ import UIKit
  
  - The Facade does not prevent classes from accessing the complex underlying subsytems if they need to.
  - The Facade can also add its own extra functionality. For instance, it could handle popping the popcorn.
- - Because the client of the Facade has no dependency on the concrete subsystem we could easily plug in another subsystem without changing our code. Indeed, if we make the Facade itself implement an interface then we can easily pass a concrete Facade into the client and route all of the client calls through the reference to the Facade.
+ - Because the client of the Facade has no dependency on the concrete subsystem we could easily plug in another subsystem without changing our code. 
+ - If we make the Facade itself implement an interface then we can easily pass a concrete Facade into the client and route all of the client calls through the reference to the Facade.
  */
 
 class Amp {
@@ -167,7 +169,8 @@ class Convertor {
     self.facade = facade
   }
   
-  func watchMovied(with title: String) {
+  func watchMovie(with title: String) {
+    // the client delegates to the facade
     facade.watchMovie(with: title)
   }
   
@@ -177,7 +180,7 @@ class Convertor {
 }
 let facade = HomeTheatreFacade(amp: Amp(), tuner: Tuner(), dvdPlayer: DVDPlayer(), mp3: MP3Player(), projector: Projector(), theaterLights: TheaterLights(), screen: Screen(), popcornPopper: PopCornPopper())
 let convertor = Convertor(with: facade)
-convertor.watchMovied(with: "Vanilla Sky")
+convertor.watchMovie(with: "Vanilla Sky")
 convertor.endMovie()
 
 /*:
@@ -190,9 +193,13 @@ convertor.endMovie()
 /*:
 ![](pr.png)
 
-- By creating a single simple dependency between our client (the Convertor) and the Facade instead of making the Convertor dependent on all of the classes involved executing its commands our Convertor has minimal knowledge of the subsystems. 
+- We have created a single simple dependency between our client (the Convertor) and the Facade.
+- The Convertor doesn't dependent on all of the classes involved in executing its commands.
+- Our Convertor has minimal knowledge of the subsystems.
 - This insulates the Convertor against change.
-- The Convertor is dependent on an abstraction and not the implementation details that it doesn't need to know about to function.
+- The Convertor is dependent on an abstraction (the facade's API) and not the implementation details.
+- The Convertor doesn't need to know the concrete details of the theatre subsystem to function.
+- Changes to the subsystem will not affect the Convertor.
 
 */
 
