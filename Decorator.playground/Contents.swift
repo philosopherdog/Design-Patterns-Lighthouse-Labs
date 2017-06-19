@@ -74,13 +74,14 @@ let houseWithWhipAndMilk = HouseBlendWithWhipAndMilk()
 houseWithWhipAndMilk.cost()
 
 /*:
-* This approach produces a class explosition with potentially infinite combos.
+* This approach produces a "class explosition" 💥 with potentially infinite combinations.
 * Adding new beverages or condiments would definitely violate the Open/Closed Principle.
+
 ![](class_expl.png)
 */
 
 /*:
-### Redesign Using Properties on the Beverage Class To Track Beverage Options
+### Attempted Redesign Using Properties on the Beverage Class To Track Beverage Options.
 */
 
 class Beverage2: CustomStringConvertible {
@@ -92,20 +93,20 @@ class Beverage2: CustomStringConvertible {
   // we would need a lot more
   
   var description: String {
-    var str = ""
+    var result = ""
     if milk == true {
-      str += "milk "
+      result += "milk "
     }
     if soy == true {
-      str += "soy "
+      result += "soy "
     }
     if mocha == true {
-      str += "mocha "
+      result += "mocha "
     }
     if whip == true {
-      str += "whip "
+      result += "whip "
     }
-    return str
+    return result
   }
   
   func cost()-> Double {
@@ -145,13 +146,14 @@ house.cost()
 house.description
 
 /*:
-- This violates the Open/Closed Principle.
+- This solution violates the Open/Closed Principle.
 - We end up with these huge switch statements in order to compute the cost.
-- Since we may have more than 1 individual condiment we would have to track this too.
+- Since we may also have double, triple, etc. condiments we would have to track this too!
 - Some condiments are inappropriate for some beverages, like tea. We will either have to still test teas for all of these condiments or add some kind of complex conditional logic.
-- This design is neither flexible nor maintainable.
+- This design is neither flexible nor maintainable. 🍝
 - What we want is a design that allows us to create a composite beverage object that can in theory have any number of condiments for which we can compute the cost.
-- We will do this using the decorator pattern.
+- We will do this using the *decorator pattern*.
+
 ![](redesign.png)
 
 */
@@ -162,12 +164,13 @@ house.description
 ![](dec_uml.png)
 [Wikipedia](https://en.wikipedia.org/wiki/Decorator_pattern)
 */
-
+// Component
 protocol Beverage3: CustomStringConvertible {
   var description: String { get }
   func cost()-> Double
 }
 
+// Concrete Component
 class HouseBlend3: Beverage3 {
   var description: String {
     return "House Blend"
@@ -187,7 +190,8 @@ class Espresso3: Beverage3 {
 }
 
 /*:
-- BeverageDecorator has-a beverage property and is-a beverage.
+- BeverageDecorator has-a beverage property (it is composed of a beverage) and is-a beverage (implements the Beverage protocol).
+- So, what the decorator does is asks the concrete component that is wraps to implement the component method (cost() in our case).
 - This is the key to the decorator pattern.
 - The decorator implements `cost()` and `description()` from the Beverage protocols. The same as the concrete beverages do.
 - But the condiment decorators require an instance that implements Beverage to be passed in at initialization.
@@ -205,6 +209,7 @@ class BeverageDecorator: Beverage3 {
   func cost() -> Double {
     return beverage.cost()
   }
+  
   var description: String {
     return beverage.description
   }
@@ -271,5 +276,6 @@ moreMocha.cost()
 /*:
 - The cost method is actually computed using recursion.
 - The outer wrapped beverage asks its beverage for its cost computation, and it asks its beverage for the same thing until we reach a concrete beverage.
+- The decorator is an OO implementation of which data structure?
 ![](cost.png)
 */
