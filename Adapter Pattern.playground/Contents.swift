@@ -3,11 +3,15 @@ import UIKit
 /*:
 ![](outlet.png)
 
-- A real world adapter sits in between an outlet whose structure is not easily changeable, and the appliance you want to plug in.
-- It would be rediculous if we had to get cut off the cable on our laptop and wire in a new one, or alternately remove the outlet from the wall and wire in a new one just to watch netflix!
-- BTW, some adapters just change the shape of the plug, some actually adjust the voltage.
-- Software adapters do the same thing as real world ones, they take a piece of software (class, protocol/interface, api) whose interface is incompatible with existing code and adapt it to an interface the client code is expecting. So, we don't need to rewrite our code to make it work.
-- The adapter acts as a middleman. It receives requests from the client and converts them into the requests appropriate for the vending class.
+- Let's consider the case of a real world outlet adapter.
+- The adapter sits in between an outlet and our laptop's plug.
+- Let's assume they are incompatible since we are traveling to Europe.
+- It would be rediculous for us to either re-wire every outlet we need to plug our laptop in while in Europe, or cut the plug off our laptop and solder in a compatible one!
+- Besides being inconvenient, expensive and possibly dangerous, our laptop might still be incompatible since some countries have different voltages.
+- Obviously it would be much smarter for us to use an adapter, which doesn't require us to change anything about the wall outlet or our laptop.
+- Software adapters do the same thing as real world ones, they take two incompatible API's and make them compatible without altering either API. 
+- There is no need to re-write existing code to make it work.
+- The adapter acts as a "middleman". It receives requests from the client and converts them into the requests appropriate for the vending class.
 
 ![](adap1.png)
 
@@ -50,10 +54,10 @@ class WildTurkey: Turkey {
 /*:
 - Let's say we want to use some Turkey objects where our program expects Ducks.
 - We can't use Turkey objects in place of Ducks because they implement a different interface.
-- So what we have to do is create a TurkeyAdapter that wraps the Turkey object in the Duck interface.
+- To solve this we can create a TurkeyAdapter which wraps the Turkey object in the Duck interface.
 */
 
-
+// We will wrap the Turkey in the Duck protocol
 class TurkeyAdapter: Duck {
   // The adapater wraps the underlying object so that it can route the expected calls to the underlying API.
   let turkey: Turkey
@@ -90,44 +94,13 @@ test(with: turkeyAdapter)
 /*:
 ![](summary.png)
 */
-/*:
-### Exercise:
-- Let's make the Mallard Duck adapt to the Turkey interface
-- We want to be able to call a test method that takes turkeys and be able to pass a Duck to this method:
-*/
-
-class DuckAdapter: Turkey {
-  let duck: Duck
-  func gobble() {
-    duck.quack()
-  }
-  func fly() {
-    duck.fly()
-  }
-  init(duck: Duck) {
-    self.duck = duck
-  }
-}
-
-
-
-func test(withTurkey: Turkey) {
-  turkey.gobble()
-  turkey.fly()
-}
-
-let duckAdapter = DuckAdapter(duck: mallard)
-
-test(withTurkey: turkey)
-test(withTurkey: duckAdapter)
 
 /*:
 ![](def.png)
 */
 
 /*:
-- The Adapter Pattern allows us to use a client with an imcompatible interface by creating an intermediate object that handles both handles the conversion and is of a compatible type.
-- The class that consumes an API/Interface (the client) can be decoupled from changes to that interface. 
+- The Adapter Pattern allows us to use a client with an imcompatible interface by creating an intermediate object that handles both the conversion and is of a compatible type.
 - We encapsulate what changes into an Adapter class.
 - Our client code is better able to extend, modify, and adapt to changes without having to anticipate all of those changes and over engineer the class at its inception. 
 - The Adapter makes our client code Open for extension but closed to modification.
