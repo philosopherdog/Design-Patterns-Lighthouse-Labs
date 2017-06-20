@@ -15,7 +15,10 @@ import UIKit
  */
 
 class MP3Player {
-  var currentPlayerState = PlayerState.pause {
+  enum PlayerState: String {
+    case playing, paused
+  }
+  var currentPlayerState = PlayerState.paused {
     didSet {
       print(#line, currentPlayerState.rawValue)
       self.button.setTitle(currentPlayerState.rawValue, for: .normal)
@@ -26,18 +29,11 @@ class MP3Player {
     self.button = UIButton()
     self.button.setTitle(currentPlayerState.rawValue, for: .normal)
   }
-  enum PlayerState: String {
-    case play = "Playing"
-    case pause = "Pausing"
-  }
-  
   func play() {
-    if currentPlayerState == .pause {
-      currentPlayerState = .play
-      return
-    }
-    if currentPlayerState == .play {
-      currentPlayerState = .pause
+    if currentPlayerState == .paused {
+      currentPlayerState = .playing
+    } else {
+      currentPlayerState = .paused
     }
   }
 }
@@ -51,11 +47,11 @@ mp3Player.button.title(for: .normal)
 /*:
  - Classes hold instance members that store data.
  - So we can say that Class instances "hold state" (that is, particular bits of stored data).
- - In out code above the `currentPlayerState` property holds an enum value that models the player's state so it can change the button's text to match.
- - A really common issue, represented in this code above, is that changes to the state requires changes to the "behaviours" or methods of a class instance.
- - So in the case above changes to `currentPlayerState` determines which branch of the play's method will be executed.
+ - In our code above the `currentPlayerState` property holds an enum value that models the player's state so it can change the button's text to match.
+ - A really common issue, represented in this code above, is that changes to the state requires or even triggers changes to the "behaviours" or methods of a class instance.
+ - So in the case above changes to `currentPlayerState` determines which branch of the play's `play()` method will be executed.
  - Generally when we see switch statements (if/else) inside methods, or we pass boolean flags or track boolean flags then we are usually writing code that needs to change behavior depending on state.
- - This code above requires the play method to respond differently depending on the state and it does this at run time.
+ - The code above requires the `play()` method to respond differently depending on the player's state (modeled by the enum) and it does this at run time.
  - Also notice that the play method triggers a state transition.
  - What is wrong with this code?
  - This is where the State Pattern comes in.
@@ -79,18 +75,18 @@ protocol PlayerState: CustomStringConvertible {
   var description: String { get }
 }
 
-class PlayPlayerState: PlayerState {
+class PlayingPlayerState: PlayerState {
   func play(with context: MP3PlayerContext) {
-    context.currentState = context.states[0]
+    context.currentState = context.states[0] // changes the state to paused
   }
   var description: String {
     return "Playing Player Now Pausing"
   }
 }
 
-class PausePlayerState: PlayerState {
+class PausedPlayerState: PlayerState {
   func play(with context: MP3PlayerContext) {
-    context.currentState = context.states[1]
+    context.currentState = context.states[1] // changes the state to play
   }
   
   var description: String {
@@ -108,11 +104,11 @@ class MP3PlayerContext {
   }
   
   func play() {
-    currentState.play(with: self)
+    currentState.play(with: self) // passes self into the state object so that it can manage the transition
   }
 }
 
-let player = MP3PlayerContext(states: [PausePlayerState(),PlayPlayerState()])
+let player = MP3PlayerContext(states: [PausedPlayerState(),PlayingPlayerState()])
 player.play()
 player.currentState.description
 player.play()
@@ -138,8 +134,8 @@ player.currentState.description
 
 
 class GumMachine {
-
-// We start with an enum to represent all of the possible states
+  
+  // We start with an enum to represent all of the possible states
   
   enum GumMachineState {
     case soldout
@@ -184,28 +180,28 @@ class GumMachine {
 }
 
 /*:
-- What is wrong with this code?!
-- Consider the case where the requirements change and the client would like us to add a new state for winning a gumball every so often.
-
-![](winner.png)
-
-- How would we add this change to the existing code?
+ - What is wrong with this code?!
+ - Consider the case where the requirements change and the client would like us to add a new state for winning a gumball every so often.
  
-*/
+ ![](winner.png)
+ 
+ - How would we add this change to the existing code?
+ 
+ */
 
 /*:
-- Instead of this mess let's use the State Pattern to make this code better.
-- Just like with the Player example above, we want to encapsulate the states as separate objects that implement a common interface.
-
-![](gum_state_obj.png)
-
-*/
+ - Instead of this mess let's use the State Pattern to make this code better.
+ - Just like with the Player example above, we want to encapsulate the states as separate objects that implement a common interface.
+ 
+ ![](gum_state_obj.png)
+ 
+ */
 /*:
-- The key is that we want to give the GumBallMachine a property that tracks what state it's in.
-- The GumBallMachine will call the transition methods on the current state, which will handle its own implementation.
-- The state object will also handle the transition to the next state.
-
-*/
+ - The key is that we want to give the GumBallMachine a property that tracks what state it's in.
+ - The GumBallMachine will call the transition methods on the current state, which will handle its own implementation.
+ - The state object will also handle the transition to the next state.
+ 
+ */
 
 // The delegate is used so the states can call back to the gumball machine.
 protocol GumBallStateDelegate: class {
@@ -373,30 +369,30 @@ print(#line, gumBallMachine.state)
 gumBallMachine.gumballCount
 
 /*:
-- This gets rid of all of the conditional code inside the GumBallMachine.
-- The behaviors are delegated to the states using polymorphism.
-- The GumBallMachine doesn't need to know what state its in.
-
-![](uml.png)
-
-- The Context delegates requests from clients to the state.
-
-![](def.png)
-
-
-- The State Pattern "encapsulates what varies" by making each state object responsible for its own behavior.
-- Our code obeys the Open/Closed principle. So we can add new states without a huge rewrite of the GumballMachine.
-*/
+ - This gets rid of all of the conditional code inside the GumBallMachine.
+ - The behaviors are delegated to the states using polymorphism.
+ - The GumBallMachine doesn't need to know what state its in.
+ 
+ ![](uml.png)
+ 
+ - The Context delegates requests from clients to the state.
+ 
+ ![](def.png)
+ 
+ 
+ - The State Pattern "encapsulates what varies" by making each state object responsible for its own behavior.
+ - Our code obeys the Open/Closed principle. So we can add new states without a huge rewrite of the GumballMachine.
+ */
 
 /*:
-### Practice Exercise
-- Let's model a traffic light with 3 states, GoState, YieldState, and StopState.
-- The context will be the TrafficLight class that will have a reference to the current state using the property state.
-- Make sure your state objects either subclass an abstract state class or implement a protocol so that the context can handle the states polymorphicly.
-- Each of the concrete states will implement the behavior, displayLight which should log out the light's color.
-- Each concrete state should also have a next method that makes it transition to the next state.
-- Initialize the context with the stopped state, and when you call next() on the context it should route this call to the state object which will handle the transition.
-*/
+ ### Practice Exercise
+ - Let's model a traffic light with 3 states, GoState, YieldState, and StopState.
+ - The context will be the TrafficLight class that will have a reference to the current state using the property state.
+ - Make sure your state objects either subclass an abstract state class or implement a protocol so that the context can handle the states polymorphicly.
+ - Each of the concrete states will implement the behavior, displayLight which should log out the light's color.
+ - Each concrete state should also have a next method that makes it transition to the next state.
+ - Initialize the context with the stopped state, and when you call next() on the context it should route this call to the state object which will handle the transition.
+ */
 
 
 
