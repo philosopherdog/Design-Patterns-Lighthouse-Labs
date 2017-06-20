@@ -2,10 +2,11 @@ import UIKit
 /*:
  # The Singleton Design Pattern:
  ![](sing_def.png)
- - Singleton is an instance, and there is only 1 of them ever created.
- - The class will prevent any object from creating more than 1 instance of the class.
- - Also, this single instance is globally accessible. What does this mean?
+ - Singleton is an instance, and there is only 1 of them ever created during apps life time.
+ - The singleton class prevents any object from creating more than 1 instance of that class.
+ - Also, this single instance is *globally* accessible. What does this mean?
  - It should also be lazy initialized. Why?
+ - The Singleton keeps only 1 set of values alive which can be globally shared.
  - Why would we need a Singleton?
  */
 
@@ -20,14 +21,17 @@ let mnws = MyNetworkManagerSingleton()
 /*:
  - First step is we want to create a private initializer.
  - This is legal and it prevents outside classes from initializing this class.
- - But how do we initialize it then?
  */
 class MyNetworkManagerSingleton2 {
   private init() {}
 }
 
-// Causes a compiler error
+// This causes a compiler error
 // let mnws2 = MyNetworkManagerSingleton2()
+
+/*:
+ - But how do we initialize it if the initializer is private?
+ */
 
 class MyNetworkManagerSingleton3 {
   private init() {}
@@ -41,7 +45,7 @@ class MyNetworkManagerSingleton3 {
 // let mnws3 = MyNetworkManagerSingleton3()
 
 /*:
- - To call the `sharedInstance` property we can't call it on an *instance* because our init is now private.
+ - To call the `sharedInstance` property we can't call it on an *instance* because our init is now private and so we can't use that to create an instance.
  - So, we have to make `sharedInstance` `static`.
  */
 
@@ -64,6 +68,14 @@ s2 = nil
 
 let s3 = MyBigSingleTon.sharedInstance
 print(Unmanaged<AnyObject>.passUnretained(s3 as AnyObject).toOpaque())
+
+/*:
+## Caveats:
+- That's pretty much it for the singleton.
+- Some developers are very down on this pattern, but it has its place.
+- The UIApplication instance is a Singleton. Imagine if it weren't??
+- iOS makes copious use of the Singleton all over the SDK.
+*/
 
 
 
