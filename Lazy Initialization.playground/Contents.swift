@@ -5,6 +5,7 @@
 /*:
 # Lazy Initialization:
 - The tactic of delaying the creation of an object, the calculation of a value, or some other expensive process until the first time it is needed. [Wikipedia](https://en.wikipedia.org/wiki/Lazy_initialization)
+- This is a prerequisite for understanding some other patterns.
 
 - In Objc you typically do this by overriding the getter.
 ```
