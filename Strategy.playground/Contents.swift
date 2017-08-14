@@ -120,7 +120,7 @@ duck.quack() // doesn't do anything
  
  ![](separate.png)
  
- - Just like Factory, we want to do is "Encapsulate What Varies".
+ - Just like Factory, we want to "Encapsulate What Varies".
  
  > "Take the parts that vary and encapsulate them, so that later you can alter or extend the parts that vary without affecting those that don’t."
  
@@ -129,7 +129,7 @@ duck.quack() // doesn't do anything
  - The simplest attempt at doing this is to move the behaviour that changes out and into a protocol or interface.
  - This way each class can conform to the protocol and implement its own fly, swim or quack behaviour.
  - If a particular Duck sub-type lacks a behaviour, say it can't fly, then it simply won't conform to the Flyable protocol.
- - Alternatively we could make a particular protocol method optional. (Prefer to not to make protocol methods optional).
+ - Alternatively we could make a particular protocol method optional. (Prefer not to make protocol methods optional).
  
  ![](protocol.png)
  
@@ -185,7 +185,7 @@ class MallardDuck2: Duck2, Flyable, Swimable, Quackable {
   }
 }
 
-// This class is almost identifical to Mallard! This points to a serious problem with the pure interface solution. Why?
+// The CanadianGooseDuck2 class is almost identifical to Mallard! This points to a serious problem with the pure interface solution. What is the problem?
 
 class CanadianGooseDuck2: Duck2, Flyable, Swimable, Quackable {
   
@@ -210,7 +210,7 @@ class CanadianGooseDuck2: Duck2, Flyable, Swimable, Quackable {
   }
 }
 
-// It doesn't Fly; so no Flyable conformance
+// RubberDuck2 doesn't Fly; so no Flyable conformance. Benefit.
 class RubberDuck2: Duck2, Swimable, Quackable {
   
   override var description: String {
@@ -230,7 +230,7 @@ class RubberDuck2: Duck2, Swimable, Quackable {
   }
 }
 
-// Neither Flys nor Quacks
+// DecoyDuck2 neither Flys nor Quacks
 class DecoyDuck2: Duck2, Swimable  {
   
   func decoySpecific() {
@@ -251,12 +251,11 @@ class DecoyDuck2: Duck2, Swimable  {
  - This solution solves our problem by making our subclasses composed of behaviors.
  - We are composing our objects from protocols rather than inheriting behavior.
  - If a particular Duck sub-type doesn't have a behavior, it doesn't conform to the protocol!
- - But this solution violates comes with a serious problem. It violates *DRY* (Do Not Repeat Yourself).
- - If you had to make changes to one or more shared behavior you would have to copy and paste your new code in potentially many places!
- - This would be a maintenance nightmare, especially in a big application.
- - Class inheritance solved this code reuse issue, but it cost us problems because our subclasses were unable to decide whether to include certain behavior. Our subclasses were also static and couldn't change behavior at run time.
+ - But this solution comes with a serious problem. It violates *DRY* (Do Not Repeat Yourself).
+ - This would be a maintenance nightmare.
+ - Recall that one of the main points of class inheritance is to save us from code repetition. But strategy points out a serious problem, namely that sometimes we don't want the behavior.
+ - Also, inheriting behavior locks us in at compile time. What if we want to write a game in which when we have enough points our decoy duck can fly! Class inheritance doesn't give us runtime dynamism.
  - In Swift 3 we do have "protocol extensions" that could help make code repetition less of a problem for some cases.
- - But notice adding behavior would still violate the `Open/Closed Principle` even if we did use protocol extensions.
  */
 
 
@@ -297,13 +296,8 @@ c2.rocketCount
 c2.shield
 
 /*:
- 
- */
-
-
-/*:
  ### Strategy Pattern Way
- - For most simple cases you could protocols and protocol extensions would probably be a reasonable solution. But we're learning the strategy pattern!
+ - For most simple cases using protocols and extensions would probably be a reasonable solution. But we're learning the strategy pattern!
  - The Strategy Pattern is similar to the protocol way except that we create classes/strucks that provide various implementations of the behaviours rather than locking the implementation of the protocols inside the Duck subclasses or using protocol extensions, which is too limited for more complex cases.
  - We can now compose the Duck subclasses of specific concrete implementations of the protocols.
  */
@@ -328,7 +322,6 @@ class FlyinHigh: Flyable {
   }
 }
 
-// Or we could decide not to conform to Flyable to indicate a concrete Duck sub-type can't fly
 class CantFly: Flyable {
   func fly() {
     print(#line, "can't fly")
@@ -359,8 +352,6 @@ class Squeaker: Quackable {
     print(#line, "squeak squeak")
   }
 }
-
-// Since Decoy can't quack it doesn't conform to Quackable.
 
 class Duck3: CustomStringConvertible {
   var soundBehavior: Quackable?
@@ -448,11 +439,11 @@ rubber.airBehavior?.fly()
 
 /*:
  - The Strategy Pattern has a bunch of major advantages.
- - One thing is that we can see everything that's happening by looking at the superclass Duck3.
+ - One thing is that we can see everything that's happening by looking at the superclass Duck3, which shows how our object are composed of (optional) behaviours that are cast to their interfaces but are actually concrete implementations.
  - We can dynamically switch behaviours at run time, which makes our code dynamic.
  - We were able to add new fly behaviors without violating the Open/Closed Principle. We never had to touch the sub-type of the super-types code to add new behaviors.
  - Also, we don't violate DRY because protocol implementations can be reused.
- - Finally our code is more reusable. Any other class could use our behaviors!
+ - Finally our code is more reusable. Any other class could theortically use our behaviors!
  
  ![](def.png)
  

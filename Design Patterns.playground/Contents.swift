@@ -3,18 +3,18 @@
  
  /*:
   ## The Need for design patterns:
-  - Change is a constant in Software
-  - Specifications.
-  - Clients can change their minds.
-  - Features can be added/removed.
-  - You will always need to refactor a program to solve problems or fix bugs.
+  - Change is a constant in Software:
+    - Specifications.
+    - Clients can change their minds.
+    - Features can be added/removed.
+    - You will always need to refactor a program to solve problems or fix bugs.
   
   - Design Patterns are ways really smart people before you have figured out how to build software that's flexible enough to handle constant change.
   
   ## What are design patterns?
   - Design Patterns are general solutions to common problems in software development.
   - Many problems in software development are related to how flexible and resilient a program is to change over the long run.
-  - Ideally our apps should be able too add or removed features without those changes impacting unrelated code.
+  - Ideally our apps should be able to add or removed features without those changes impacting unrelated code.
   - For instance, we should be able to easily swap out `Core Data` for `Realm` without having to rebuild our view controllers in the process!
   - Design patterns are generalized guidelines for building robust code that applies regardless of the specific domain.
   - So they are the same in, say, game development as they are in an e-commerce app, in iOS or in web development.

@@ -20,7 +20,7 @@ return _url;
 ```
 */
 /*:
-- In Swift there is a keyword `lazy` since there are officially no property getters.
+- In Swift there is a keyword `lazy` since there are officially no property getters (except for computed properties).
 - You can always roll your own Objc style properties in Swift. I will show both.
 */
 
@@ -53,7 +53,7 @@ let manager1 = swiftLazy.networkManager
 
 
 
-class TheCode {
+class TheCodes {
   
   // private backing store
   private var _networkManager: NetWorkManager?
@@ -70,8 +70,8 @@ class TheCode {
   }
 }
 
-let theCode = TheCode()
-theCode.networkManager
+let theCodes = TheCodes()
+theCodes.networkManager
 
 
 

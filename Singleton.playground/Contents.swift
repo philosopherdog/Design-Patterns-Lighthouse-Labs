@@ -2,10 +2,10 @@ import UIKit
 /*:
  # The Singleton Design Pattern:
  ![](sing_def.png)
- - Singleton is an instance, and there is only 1 of them ever created during apps life time.
+ - Singleton is an instance, and there is only 1 of them ever created during the apps life time.
  - The singleton class prevents any object from creating more than 1 instance of that class.
  - Also, this single instance is *globally* accessible. What does this mean?
- - It should also be lazy initialized. Why?
+ - It should also be lazy initialized.
  - The Singleton keeps only 1 set of values alive which can be globally shared.
  - Why would we need a Singleton?
  */
@@ -35,7 +35,7 @@ class MyNetworkManagerSingleton2 {
 
 class MyNetworkManagerSingleton3 {
   private init() {}
-  // let sharedInstance = MyNetworkManagerSingleton3()
+   let sharedInstance = MyNetworkManagerSingleton3()
 }
 
 /*:
@@ -58,23 +58,24 @@ class MyBigSingleTon {
 
 
 var s1: MyBigSingleTon? = MyBigSingleTon.sharedInstance
-print(Unmanaged<AnyObject>.passUnretained(s1 as AnyObject).toOpaque())
+print(#line, Unmanaged<AnyObject>.passUnretained(s1 as AnyObject).toOpaque())
 
 var s2: MyBigSingleTon? = MyBigSingleTon.sharedInstance
-print(Unmanaged<AnyObject>.passUnretained(s2 as AnyObject).toOpaque())
+print(#line, Unmanaged<AnyObject>.passUnretained(s2 as AnyObject).toOpaque())
 
 s1 = nil
 s2 = nil
 
 let s3 = MyBigSingleTon.sharedInstance
-print(Unmanaged<AnyObject>.passUnretained(s3 as AnyObject).toOpaque())
+print(#line, Unmanaged<AnyObject>.passUnretained(s3 as AnyObject).toOpaque())
 
 /*:
-## Caveats:
-- That's pretty much it for the singleton.
-- Some developers are very down on this pattern, but it has its place.
-- The UIApplication instance is a Singleton. Imagine if it weren't??
-- iOS makes copious use of the Singleton all over the SDK.
+ ## Caveats:
+ - That's pretty much it for the singleton.
+ - Some developers are very down on this pattern, but it has its place.
+ - The UIApplication instance is a Singleton. Imagine if it weren't??
+ - iOS makes copious use of the Singleton all over the SDK.
+ - Singletons are very hard to unit test.
 */
 
 

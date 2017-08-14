@@ -30,11 +30,7 @@ class MP3Player {
     self.button.setTitle(currentPlayerState.rawValue, for: .normal)
   }
   func play() {
-    if currentPlayerState == .paused {
-      currentPlayerState = .playing
-    } else {
-      currentPlayerState = .paused
-    }
+    currentPlayerState = currentPlayerState == .paused ? .playing : .paused
   }
 }
 

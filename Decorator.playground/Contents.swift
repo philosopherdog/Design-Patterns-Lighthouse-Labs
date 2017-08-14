@@ -56,7 +56,7 @@ class Espresso: Beverage {
   }
 }
 
-// But there are potentially many variants if we start to take into account condiment
+// Problems: There are potentially many variants if we start to take into account condiment
 
 class HouseBlendWithSteamedMilkAndMocha: HouseBlend {
   override func cost() -> Double {
@@ -106,7 +106,7 @@ class Beverage2: CustomStringConvertible {
     if whip == true {
       result += "whip "
     }
-    return result
+    return result.trimmingCharacters(in: .whitespaces)
   }
   
   func cost()-> Double {
@@ -165,13 +165,13 @@ house.description
 [Wikipedia](https://en.wikipedia.org/wiki/Decorator_pattern)
 */
 // Component
-protocol Beverage3: CustomStringConvertible {
+protocol BeverageProtocol: CustomStringConvertible {
   var description: String { get }
   func cost()-> Double
 }
 
-// Concrete Component
-class HouseBlend3: Beverage3 {
+// Concrete Components
+class HouseBlend3: BeverageProtocol {
   var description: String {
     return "House Blend"
   }
@@ -180,7 +180,7 @@ class HouseBlend3: Beverage3 {
   }
 }
 
-class Espresso3: Beverage3 {
+class Espresso3: BeverageProtocol {
   var description: String {
     return "Espresso"
   }
@@ -189,23 +189,15 @@ class Espresso3: Beverage3 {
   }
 }
 
-/*:
-- BeverageDecorator has-a beverage property (it is composed of a beverage) and is-a beverage (implements the Beverage protocol).
-- So, what the decorator does is asks the concrete component that is wraps to implement the component method (cost() in our case).
-- This is the key to the decorator pattern.
-- The decorator implements `cost()` and `description()` from the Beverage protocols. The same as the concrete beverages do.
-- But the condiment decorators require an instance that implements Beverage to be passed in at initialization.
-- This could be either a concrete Beverage, or a decorator!
-- Notice we need this super class BeverageDecorator to avoid repeating the beverage property and initializer in all concrete decorators.
-*/
 
-class BeverageDecorator: Beverage3 {
-  let beverage: Beverage3
+class BeverageDecorator: BeverageProtocol {
+  let beverage: BeverageProtocol
   
-  init(beverage: Beverage3) {
+  init(beverage: BeverageProtocol) {
     self.beverage = beverage
   }
   
+  // protocol conformance
   func cost() -> Double {
     return beverage.cost()
   }
@@ -214,6 +206,16 @@ class BeverageDecorator: Beverage3 {
     return beverage.description
   }
 }
+
+/*:
+ - BeverageDecorator has-a beverage property (it is composed of a beverage) and is-a beverage (implements the Beverage protocol).
+ - So, what the decorator does is asks the concrete component that it wraps to implement the component method (cost() in our case).
+ - This is the key to the decorator pattern.
+ - The decorator implements `cost()` and `description()` from the BeverageProtocol. The same as the concrete beverages do.
+ - But the condiment decorators require an instance that implements Beverage to be passed in at initialization.
+ - This could be either a concrete beverage, or a decorator, since both satisfy the protocol type!
+ - Notice we need the super class BeverageDecorator to avoid repeating the beverage property and initializer in all concrete decorators. All decorators will subclass this super class.
+ */
 
 class MilkDecorator: BeverageDecorator {
   
