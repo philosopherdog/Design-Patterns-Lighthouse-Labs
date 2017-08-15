@@ -6,7 +6,7 @@ import UIKit
 - Let's consider the case of a real world outlet adapter.
 - The adapter sits in between an outlet and our laptop's plug.
 - Let's assume they are incompatible since we are traveling to Europe.
-- It would be rediculous for us to either re-wire every outlet we need to plug our laptop in while in Europe, or cut the plug off our laptop and solder in a compatible one!
+- It would be rediculous for us to re-wire outlets or cut the plug off our laptop and solder in a compatible one to solve this problemF!
 - Besides being inconvenient, expensive and possibly dangerous, our laptop might still be incompatible since some countries have different voltages.
 - Obviously it would be much smarter for us to use an adapter, which doesn't require us to change anything about the wall outlet or our laptop.
 - Software adapters do the same thing as real world ones, they take two incompatible API's and make them compatible without altering either API. 
@@ -22,12 +22,12 @@ import UIKit
 */
 
 
-protocol Duck {
+protocol DuckProtocol {
   func quack()
   func fly()
 }
 
-class Mallard: Duck {
+class Mallard: DuckProtocol {
   func quack() {
     print(#line, "quack!")
   }
@@ -36,13 +36,13 @@ class Mallard: Duck {
   }
 }
 
-protocol Turkey {
+protocol TurkeyProtocol {
   func gobble()
   func fly()
 }
 
 
-class WildTurkey: Turkey {
+class WildTurkey: TurkeyProtocol {
   func gobble() {
     print(#line, "gobble gobble")
   }
@@ -58,11 +58,11 @@ class WildTurkey: Turkey {
 */
 
 // We will wrap the Turkey in the Duck protocol
-class TurkeyAdapter: Duck {
+class TurkeyAdapter: DuckProtocol {
   // The adapater wraps the underlying object so that it can route the expected calls to the underlying API.
-  let turkey: Turkey
+  let turkey: TurkeyProtocol
   
-  init(with turkey: Turkey) {
+  init(with turkey: TurkeyProtocol) {
     self.turkey = turkey
   }
   
@@ -76,14 +76,14 @@ class TurkeyAdapter: Duck {
 }
 
 
-let mallard:Duck = Mallard()
+let mallard:DuckProtocol = Mallard()
 
 let turkey = WildTurkey()
 let turkeyAdapter = TurkeyAdapter(with: turkey)
 
 // Notice the test method which is the client that consumes our objects takes only Ducks.
 
-func test(with duck: Duck) {
+func test(with duck: DuckProtocol) {
   duck.fly()
   duck.quack()
 }
@@ -100,12 +100,12 @@ test(with: turkeyAdapter)
 */
 
 /*:
-- The Adapter Pattern allows us to use a client with an imcompatible interface by creating an intermediate object that handles both the conversion and is of a compatible type.
+- The Adapter Pattern allows us to use a client with an incompatible interface by creating an intermediate object that handles both the conversion and is of a compatible type.
 - We encapsulate what changes into an Adapter class.
 - Our client code is better able to extend, modify, and adapt to changes without having to anticipate all of those changes and over engineer the class at its inception. 
-- The Adapter makes our client code Open for extension but closed to modification.
+- The Adapter makes our client code Open for extension but closed to modification (Open/Closed Principle).
 - The Adapter Pattern is related to the Decorator Pattern, but they are quite different.
-- The Adapter changes the interface of an object by wrapping it and it manages routing calls from the new interface to the old.
+- The Adapter changes the interface of an object by wrapping it and it manages routing calls from the compatible interface to the old incompatible one.
 - The Decorator doesn't change the interface of an object it iteratively wraps an object to add more implementations of the methods defined in the shared interface.
 - There is another Pattern Related to the Adapter called the Facade. This pattern makes an interface simpler. Let's have a quick look at that one next.
 */

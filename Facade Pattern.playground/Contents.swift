@@ -180,7 +180,8 @@ class Convertor {
 }
 let facade = HomeTheatreFacade(amp: Amp(), tuner: Tuner(), dvdPlayer: DVDPlayer(), mp3: MP3Player(), projector: Projector(), theaterLights: TheaterLights(), screen: Screen(), popcornPopper: PopCornPopper())
 let convertor = Convertor(with: facade)
-convertor.watchMovie(with: "Vanilla Sky")
+let title = "Vanilla Sky"
+convertor.watchMovie(with: title)
 convertor.endMovie()
 
 /*:

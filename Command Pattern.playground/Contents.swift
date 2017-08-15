@@ -9,11 +9,11 @@ import UIKit
 
 ![](inconsistent.png)
 
-- What we want to avoid is a bunch of switch statements like if `slot1 == self.light` then `light.on()`.
-- The Command allows you to decouple the object that requests an action (the remote) from the object that executes the acton (the appliance).
-- The classical pattern does this by introducing "command objects" that encapsulates a request (light turn on the lights) and the concrete object that is to execute this request.
+- What we want to avoid is a bunch of switch statements like if `slot1 == self.light` then `light.on()`, etc.
+- The Command Pattern allows you to decouple the object that requests an action (the remote) from the object that executes the acton (the appliance).
+- The classical pattern does this by introducing "command objects" that encapsulates a request (light turn on the lights) and a reference to the concrete object that is to execute this request.
 - The remote has no idea about the concrete class or its API. They are decoupled.
-- BTW, this pattern is used all over the place in iOS. For instance, it is used in the Observer Pattern (NotificationCenter) and OperationQueue. The primary way you to this in iOS if you're to hand roll your own command pattern would be to use blocks/closures.
+- BTW, this pattern is used all over the place in iOS. For instance, it is used in the Observer Pattern (NotificationCenter) and OperationQueue. The primary way you do this in iOS if you're to hand roll your own command pattern would be to use blocks/closures.
 - Let's start with a simple example of the Command Pattern that is a remote that controls Lights and a GarageDoor.
 
 */
@@ -29,11 +29,12 @@ struct Light {
   }
 }
 
-protocol Command {
+protocol CommandProtocol {
   func execute()
 }
 
-struct LightOnCommand: Command {
+struct LightOnCommand: CommandProtocol {
+  // reference to the receiver
   let light: Light
   func execute() {
     light.on()
@@ -42,7 +43,8 @@ struct LightOnCommand: Command {
 
 
 
-struct LightOffCommand: Command {
+struct LightOffCommand: CommandProtocol {
+  // reference to the receiver
   let light: Light
   func execute() {
     light.off()
@@ -51,8 +53,8 @@ struct LightOffCommand: Command {
 
 // This is the Invoker
 struct SimpleRemoteControl {
-  var slot: Command? = nil
-  mutating func set(command: Command) {
+  private var slot: CommandProtocol? = nil
+  mutating func set(command: CommandProtocol) {
     self.slot = command
   }
   func buttonWasPressed() {
@@ -84,7 +86,8 @@ struct GarageDoor {
   }
   
 }
-struct GarageDoorOpenCommand: Command {
+struct GarageDoorOpenCommand: CommandProtocol {
+  // reference to the receiver
   let garageDoor: GarageDoor?
   func execute() {
     garageDoor?.lightOn()
@@ -123,8 +126,8 @@ remote.buttonWasPressed()
 
 // Something like this:
 
-var onCommands: [Command] = []
-var offCommands: [Command] = []
+var onCommands: [CommandProtocol] = []
+var offCommands: [CommandProtocol] = []
 
 onCommands.append(lightOnCommand)
 onCommands.append(garageDoorOpenCommand)
